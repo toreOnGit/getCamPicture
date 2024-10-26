@@ -27,22 +27,25 @@ while True:
     get_image(url,eval_file)
     result = reader.readtext(eval_file, detail = 0)
     datetime_str = result[2] + " " + result[3]
-    pictureStamp = datetime.strptime(datetime_str, '%d-%m-%Y %H:%M:%S')
-    print(pictureStamp)
+    datetime_str = datetime_str.replace(".", ":")
+    try:
+        pictureStamp = datetime.strptime(datetime_str, '%d-%m-%Y %H:%M:%S')
+        print(pictureStamp)
 
-    if pictureStamp == lastPictureStamp:
-        print("Still the same image")
-    else:
-        lastPictureStamp = pictureStamp
-
-        folderName = path + '/pictures/' + pictureStamp.strftime("%Y%m%d")
-        fileName = pictureStamp.strftime("%H-%M-%S") + ".png" 
-        if (os.path.exists(folderName)):
-            print("Folder exists")
+        if pictureStamp == lastPictureStamp:
+            print("Still the same image")
         else:
-            print("Folder does not exist")
-            os.mkdir(folderName)
-        
-        print("Moving image")
-        shutil.move(eval_file, folderName + "/" + fileName)
-        time.sleep(10)
+            folderName = path + '/pictures/' + pictureStamp.strftime("%Y%m%d")
+            fileName = pictureStamp.strftime("%H-%M-%S") + ".png" 
+            if (os.path.exists(folderName)):
+                print("Folder exists")
+            else:
+                print("Folder does not exist")
+                os.mkdir(folderName)
+            
+            print("Moving image")
+            shutil.move(eval_file, folderName + "/" + fileName)
+    except:
+        print("An error occurred")
+    lastPictureStamp = pictureStamp
+    time.sleep(60)
